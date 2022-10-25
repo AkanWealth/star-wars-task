@@ -25,11 +25,11 @@ export type IStore = {
     characterDetails: {
         key: number;
         name: string;
-        gender: string;
+        gender: string | JSX.Element;
         height: string;
     }[];
-    displayCharacters: boolean;
-    movieSubDetails: {
+    characters: boolean;
+    films: {
         title: string;
         director: string;
         producer: string;

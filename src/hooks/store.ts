@@ -1,9 +1,9 @@
 import create from "zustand";
 import { IStore } from "../types";
 
-const useStore = create<IStore>(() => ({
+const store = create<IStore>(() => ({
     loading: false,
-    movieSubDetails: {
+    films: {
         title: '',
         director: '',
         producer: '',
@@ -11,7 +11,7 @@ const useStore = create<IStore>(() => ({
         opening_crawl: '',
     },
     characterDetails: [],
-    displayCharacters: false,
+    characters: false,
 }));
 
-export default useStore;
+export default store;

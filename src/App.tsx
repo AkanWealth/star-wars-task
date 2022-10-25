@@ -1,16 +1,16 @@
 import { IFilms } from './types';
+import store from './hooks/store';
 import { notification } from 'antd';
-import Logo from './assets/logo.png';
 import { useQuery } from 'react-query';
-import { retrieveMovies } from './server';
-import useStore from './hooks/summitech.store';
-import MovieDetails from './components/MovieDetails';
-import MovieSelector from './components/MovieSelector';
+import StarWars from './assets/logo.png';
+import { getMovies } from './server/service';
+import FilmDetails from './components/MovieDetails';
+import MovieOptions from './components/MovieOptions';
 
 const App = () => {
-  const { director } = useStore((state) => state.movieSubDetails);
-  const displayCharacters = useStore((state) => state.displayCharacters);
-  const { data, isLoading } = useQuery<IFilms>('films', retrieveMovies, {
+  const { director } = store((state) => state.films);
+  const showMovieCharacter = store((state) => state.characters);
+  const { data, isLoading } = useQuery<IFilms>('films', getMovies, {
     onError: (error) => {
       notification.open({
         message: 'Error',
@@ -20,30 +20,49 @@ const App = () => {
   });
 
   return (
-    <div>
-      <div className="flex justify-between items-center">
-        {displayCharacters && (
-          <img src={Logo} height="150" width="150" alt="star-war logo" />
+    <>
+    <div className="bg-black">
+      <div className="lg:flex lg:justify-between lg:items-center">
+        {showMovieCharacter && (
+          <>
+            <img
+              src={StarWars}
+              height="100"
+              width="100"
+              alt="star-war"
+              className="ml-10 mt-5"
+            />
+            <div className="text-white sm:block m-10 text-center lg:text-right">
+              <p>Directed By: {director}</p>
+            </div>
+          </>
         )}
-        <div className="text-white hidden sm:block mr-5">
-          <p>Directed By: {director}</p>
-        </div>
       </div>
 
-      <div>
-        {displayCharacters ? (
-          <div className="sm:mx-10 mx-2 my-5">
-            <MovieDetails />
+      <div className="bg-white mt-5">
+        {showMovieCharacter ? (
+          <div className="flex justify-center items-center mt-10 ">
+            <MovieOptions loading={isLoading} data={data} />
           </div>
         ) : (
-          <img src={Logo} alt="star-war logo" />
+          <div className="flex justify-center items-center mt-10 bg-black">
+            <MovieOptions loading={isLoading} data={data} />
+          </div>
         )}
-      </div>
 
-      <div className="sm:fixed left-0 bottom-0 w-full z-50 flex justify-center items-center mb-5">
-        <MovieSelector loading={isLoading} data={data} />
+        <div className="bg-white">
+          {showMovieCharacter ? (
+            <div className="sm:mx-10 mx-2 my-5">
+              <FilmDetails />
+            </div>
+          ) : (
+            <img src={StarWars} alt="star-war logo" />
+          )}
+        </div>
       </div>
     </div>
+    <div className="bg-white h-[400px]"></div>
+    </>
   );
 };
 
